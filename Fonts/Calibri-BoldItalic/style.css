@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Calibri';
+    src: local('Calibri Bold Italic'), local('Calibri-Bold-Italic'),
+        url('Calibri-BoldItalic.woff2') format('woff2'),
+        url('Calibri-BoldItalic.woff') format('woff'),
+        url('Calibri-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+  }
