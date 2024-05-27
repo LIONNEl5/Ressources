@@ -1,3 +1,37 @@
+<?php
+require '../required/db_connect.php';
+
+function changmt_sim(){
+  $query="SELECT * FROM carte_sim
+  WHERE ICCID=$sim_iccid
+  ";
+  if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+      $iccid=$row['Status'];
+    }
+    if($iccid="suspendu"|| $iccid="EN STOCK"){
+      $req_up2="UPDATE carte_sim
+      SET Statut = 'Actif'
+      WHERE ICCID=$sim_iccid";
+      if (mysqli_query($conn, $req_up2)) {
+      echo "modif reussi";
+      }
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>

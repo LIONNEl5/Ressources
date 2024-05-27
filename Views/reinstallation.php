@@ -30,17 +30,85 @@ $date = $_POST['date'];
     $heureF = $_POST['HF'];
     $heureDP = $_POST['HDP'];
 
+//REINSTALLATION
+$req_se1="SELECT IMEI FROM base_boitier
+WHERE IMEI ='$imei' AND Statut='suspendu'";
+  if (mysqli_query($conn, $req_se1)) {
+  echo "touver";
 
-
-    $so = $_POST['so'];
-    $ca = $_POST['ca'];
-
-$req_up0="UPDATE base_boitier
-SET Statut = 'Suspend'
+  $req_up0="UPDATE base_boitier
+SET Statut = 'Actif'
 WHERE  IMEI='$imei'";
 if (mysqli_query($conn, $req_up0)) {
 echo "modif reussi";
 }
+
+$query="SELECT * FROM carte_sim
+WHERE ICCID=$sim_iccid
+";
+if ($result && mysqli_num_rows($result) > 0) {
+  while ($row = mysqli_fetch_assoc($result)) {
+    $iccid=$row['Status'];
+  }
+  if($iccid="suspendu"|| $iccid="EN STOCK"){
+    $req_up2="UPDATE carte_sim
+    SET Statut = 'Actif'
+    WHERE ICCID=$sim_iccid";
+    if (mysqli_query($conn, $req_up2)) {
+    echo "modif reussi";
+    }
+    $req_insert1 = "INSERT INTO INTERVENTION(Lieu_intervention,Date_intervention,HeureDebut,HeureFin,HeureArriver,HeureDepart,Statut)VALUES('$lieu_intervention', '$date', '$heureD', '$heureF','$heureA','$heureDP','$observation_apres')";
+        if (mysqli_query($conn, $req_insert1)) {
+        $dernierId1 = mysqli_insert_id($conn);
+        echo "Enregistrement inséré avec succès2";
+    
+        $req_insert2 = "INSERT INTO VEHICULE(Marque,Chassis,Immatriculation,Index_kilo,Annee_circulation,InterventionID,Statut)VALUES('$lieu_intervention', '$date', '$heureD', '$heureF','$heureA','$heureDP','$observation_apres')";
+        if (mysqli_query($conn, $req_insert2)) {
+        $dernierId2 = mysqli_insert_id($conn);
+        echo "Enregistrement inséré avec succès2";
+        }
+le client peut etre trouver plus besoin dentrer a la main 
+        $req_insert0 = "INSERT INTO CLIENT(Nom,Telephone,Email,VehiculeID,InterventionID)  VALUES ('$nom_client', '', '', '$dernierId','$dernierId1')";
+        if (mysqli_query($conn, $req_insert0)) {
+        $dernierId0 = mysqli_insert_id($conn);
+        echo "Enregistrement inséré avec succès2";
+        }
+
+        $req_insert2 = "INSERT INTO REINSTALLATION(ICCID,NUM_SERIE_CA,NUM_SERIE_SO,IMEI,InterventionID )VALUES ('$sim_iccid', '$ca', '$so','$imei','$dernierId1')";
+        if (mysqli_query($conn, $req_insert2)) {
+        $dernierId2 = mysqli_insert_id($conn);
+        echo "Enregistrement inséré avec succès2";
+        }
+
+
+
+      
+        }
+
+
+
+
+
+    }else if($iccid=="HS"){
+
+       }
+
+  }else{
+    echo "sim nexiste pas ";
+  }
+
+
+  }else{
+    echo " pas touver";
+  }
+
+
+//REISTALLATION 
+
+    $so = $_POST['so'];
+    $ca = $_POST['ca'];
+
+
 
 $req_up1="UPDATE VEHICULE
 SET Statut = 'desinstaller'
@@ -217,7 +285,7 @@ $req_insert0 = "INSERT INTO CLIENT(Nom,Telephone,Email,VehiculeID,InterventionID
 <input type="text" placeholder="NOM DE CLIENT" class="text-input" name="nom_client">
 <input type="text" placeholder="LIEU D'INTERVENTION " class="text-input" name="lieu_intervention">
 <input type="text" placeholder="CHASSIS DU VEHICULE" class="text-input" name="chassis_vehicule">
-<input type="number" placeholder="SIM ICCID " class="text-input" name="sim_iccid">
+<input type="number" placeholder=" NOUVELLE SIM ICCID " class="text-input" name="sim_iccid">
 <input type="text" placeholder="OBSERVATION avnt intervention " class="text-input" name="observation_avant">
 <input type="text" placeholder="OBSERVATION apres intervention " class="text-input" name="observation_apres">
 <input type="text" placeholder="NOM DU TECHNICIEN " class="text-input" name="nom_technicien">
