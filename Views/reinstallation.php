@@ -67,7 +67,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         $dernierId2 = mysqli_insert_id($conn);
         echo "Enregistrement inséré avec succès2";
         }
-le client peut etre trouver plus besoin dentrer a la main 
+//le client peut etre trouver plus besoin dentrer a la main 
         $req_insert0 = "INSERT INTO CLIENT(Nom,Telephone,Email,VehiculeID,InterventionID)  VALUES ('$nom_client', '', '', '$dernierId','$dernierId1')";
         if (mysqli_query($conn, $req_insert0)) {
         $dernierId0 = mysqli_insert_id($conn);

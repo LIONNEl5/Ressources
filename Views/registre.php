@@ -1,3 +1,8 @@
+<?php
+require '../required/db_connect.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -13,7 +18,7 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../Css/styles_Index.css">
-    <link rel="stylesheet" href="../Css/style.css">
+    <link rel="stylesheet" href="../Css/styless.css">
   </head>
   <body>
     <div class="grid-container">
@@ -91,35 +96,80 @@
    <!-- Main -->
 <main class="main-container">
   <div class="main-title">
-    <p class="font-weight-bold"><strong>OPERATION</strong></p>
+    <p class="font-weight-bold"><strong>REPERTOIRE</strong></p>
   </div>
 
-  <div class="operation-buttons">
-    <div class="operation-button">
-      <a href="Installation.php">
-        <span class="material-icons-outlined">settings</span>
-        <span>installation</span>
-      </a>
-    </div>
-    <div class="operation-button">
-      <a href="reinstallation.php">
-        <span class="material-icons-outlined">build</span>
-        <span>Réinstallation</span>
-      </a>
-    </div>
-    <div class="operation-button">
-      <a href="desinstallation">
-        <span class="material-icons-outlined">delete</span>
-        <span>Désinstallation</span>
-      </a>
-    </div>
-    <div class="operation-button">
-      <a href="maintenance">
-        <span class="material-icons-outlined">build_circle</span>
-        <span>Maintenance</span>
-      </a>
-    </div>
-  </div>
+
+  <div class="form-container">
+  <h2 class="form-section-title">FICHIER DES BONS DE COMMANDE</h2>
+
+</div>  
+<div class="form-section">
+<h5 class="form-section-title">DETAILS DU FICHIER</h5>
+<div class="input-container">
+    <form method="POST" action="fichier_bons_de_commande.php">
+<input type="date"  class="text-input" name="datere">
+<input type="text"placeholder="NUMERO DU BON" class="text-input" name="nubo">
+<input type="submit" value="Imprimer" class="text-input" name="nom_technicien">
+</form>
+</div> 
+</div> 
+
+<div class="form-container">
+<h2 class="form-section-title">FICHIER DES OPERATIONS</h2>
+</div>  
+
+<div class="form-section">
+<h5 class="form-section-title">DETAILS DU FICHIER</h5>
+<div class="input-container">
+    <form method="POST" action="#">
+<input type="date"  class="text-input" name="nom_technicien">
+<input type="text"placeholder="NOM DU CLIENT" class="text-input" name="nom_technicien">
+<select id="selection" name="selection" class="text-input" style="height: 40px;
+    font-size: 16px; width:200px; margin-right:12px;">
+    <option value="">Operation</option>
+    <option value="option1">Installation</option>
+    <option value="option2">Désinstallation</option>
+    <option value="option3">Maintenance</option>
+</select>
+<input type="submit" value="Imprimer" class="text-input" name="nom_technicien">
+</form>
+</div> 
+</div> 
+
+
+<div class="form-container">
+<h2 class="form-section-title">FICHIER DES BILANS</h2>
+</div>   
+
+<div class="form-section">
+<h5 class="form-section-title">DETAILS DU FICHIER</h5>
+<div class="input-container">
+<form method="POST" action="#">
+<input type="submit" value="Imprimer" class="text-input" name="nom_technicien" style="height: 40px;
+    font-size: 16px; width:200px; margin-right:12px;">
+</form>
+</div> 
+</div> 
+
+
+<div class="form-container">
+<h2 class="form-section-title">FICHIER DES MISSIONS</h2>
+</div> 
+
+<div class="form-section">
+<h5 class="form-section-title">DETAILS DU FICHIER</h5>
+<div class="input-container">
+    <form method="POST" action="fichier_odm.php">
+<input type="date"  class="text-input" name="datefm">
+<input type="text" placeholder="NOM DU MISSIONNAIRE" class="text-input" name="missn">
+<input type="submit" value="Imprimer" class="text-input" name="nom_technicien">
+</form>
+</div> 
+</div> 
+
+
+</div>   
 </main>
 <!-- End Main -->
       <!-- End Main -->

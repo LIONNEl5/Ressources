@@ -17,7 +17,9 @@ if (
   isset($_POST['sim_iccid'])&&
   isset($_POST['observation_avant'])&&
   isset($_POST['observation_apres'])&&
-  isset($_POST['nom_technicien'])
+  isset($_POST['nom_technicien'])&&
+  isset($_POST['so'])&&
+  isset($_POST['ca'])
 
 ) {
 $imei = $_POST['imei'];
@@ -37,6 +39,9 @@ $heureD=$_POST['HD'];
 $heureA=$_POST['HA'];
 $heureF=$_POST['HF'];
 $heureDP=$_POST['HDP'];
+$so = $_POST['so'];
+$ca = $_POST['ca'];
+
 
 $buzzer_parametre_oui = isset($_POST['buzzer_parametre_oui']);
 $buzzer_parametre_non = isset($_POST['buzzer_parametre_non']);
@@ -80,38 +85,54 @@ $cameraNon = isset($_POST['camera_non']);
 */
   // Traiter le cas où toutes les checkboxes "OUI" sont cochées
   if ($badgeIdChauffeurOui && $sondeOui && $cameraOui) {
-    $so = $_POST['so'];
-    $ca = $_POST['ca'];
+   
 
-  $sql1 = "UPDATE base_camera
+  $sql1 = "UPDATE carte_sim
   SET Statut='Actif'
-  WHERE NUM_SERIE=$ca";
+  WHERE ICCID=$sim_iccid";
 
-$sql1 = "UPDATE base_camera
+$sql0 = "UPDATE base_boitier
+SET Statut='Actif'
+WHERE IMEI=$imei";
+
+$sql2 = "UPDATE base_camera
 SET Statut='Actif'
 WHERE NUM_SERIE=$ca";
 
-$sql1 = "UPDATE base_camera
+$sql3 = "UPDATE base_sonde
 SET Statut='Actif'
-WHERE NUM_SERIE=$ca";
+WHERE NUM_SERIE=$so";
 
 
-if (mysqli_query($conn, $sql1)) {
+if (mysqli_query($conn, $sql1) && mysqli_query($conn, $sql0) && mysqli_query($conn, $sql2) && mysqli_query($conn, $sql3)) {
   echo "Enregistrement inséré avec succès2";
   }
-  $req_insert3 = "INSERT INTO INTERVENTION(Lieu_intervention,Date_Intervention,HeureDebut,HeureFin,HeureArriver,HeureDepart,Statut)VALUES('$lieu_intervention', $date, '$heureD', $heureF,$heureA,$heureDP,$observation_apres)";
+  $req_insert3 = "INSERT INTO INTERVENTION(Lieu_intervention,Date_Intervention,HeureDebut,HeureFin,HeureArriver,HeureDepart,Statut)VALUES('$lieu_intervention', '$date', '$heureD', '$heureF','$heureA','$heureDP','$observation_apres')";
   if (mysqli_query($conn, $req_insert3)) {
 $dernierId2 = mysqli_insert_id($conn);
 echo "Enregistrement inséré avec succès2";
 
+$req_insert1 = "INSERT INTO VEHICULE(Marque,Chassis,Immatriculation,Index_kilo,Annee_circulation,InterventionID,Statut) VALUES ('$marque_vehicule', '$chassis_vehicule', '$immatriculation', $index_kilo, $annee_circulation,$dernierId2,'Actif')";
+
+if (mysqli_query($conn, $req_insert1)) {
+  $dernierId = mysqli_insert_id($conn);
+  echo "Enregistrement inséré avec succès1";
+  
+  $req_insert2 = "INSERT INTO CLIENT(Nom,Telephone,Email,VehiculeID,InterventionID) VALUES ('$nom_client', '', '', '$dernierId','$dernierId2')";
+  if (mysqli_query($conn, $req_insert2)) {
+    $dernierIdx = mysqli_insert_id($conn);
+    echo "Enregistrement inséré avec succès2";
+  }
+}
    }
  
-    $req_insert4 = "INSERT INTO INSTALLATION(PRECONFIGURATION,ICCID,NUM_SERIE_CA,NUM_SERIE_SO,IMEI,InterventionID )VALUES ('REVOIR', $sim_iccid, $ca, $so,$imei,$dernierId2)";
+    $req_insert4 = "INSERT INTO INSTALLATION(PRECONFIGURATION,ICCID,NUM_SERIE_CA,NUM_SERIE_SO,IMEI,InterventionID)VALUES ('REVOIR', $sim_iccid, $ca, $so,$imei,$dernierId2)";
        if (mysqli_query($conn, $req_insert4)) {
     $dernierId3 = mysqli_insert_id($conn);
     echo "Enregistrement inséré avec succès2";
 
- }else{
+        }
+else{
     echo "Enregistrement echec avec succès1";
 }
 }
@@ -225,7 +246,7 @@ echo "Enregistrement inséré avec succès2";
         </div>
     
     </div>
-</div>
+</div>    
       <div class="form-section">
         <p class="form-section-title">INFORMATIONS</p>
         <div class="input-container">
@@ -244,7 +265,7 @@ echo "Enregistrement inséré avec succès2";
            
 
             
-          
+    
         </div>
       </div>
 
@@ -257,16 +278,20 @@ echo "Enregistrement inséré avec succès2";
         <label>
           Badge/Id Chauffeur
         </label>
+        <input type="text" placeholder="NUM SERIE" class="text-input" name="ba">
       </div>
       <div class="checkbox-row">
         <label>
-          Sonde
+          Sonde  
+          <input type="text" placeholder="NUM SERIE" class="text-input" name="so">
         </label>
+        
       </div>
       <div class="checkbox-row">
         <label>
           Caméra
         </label>
+        <input type="text" placeholder="NUM SERIE" class="text-input" name="ca">
       </div>
     </div>
     <div class="column">
@@ -365,7 +390,7 @@ echo "Enregistrement inséré avec succès2";
 </div>
 <div class="form-container">
 <div class="input-container">
-<div class=column>
+  <div class=column>
   <label>HEURE D'ARRIVE  </label><input type="TIME" placeholder="HEURE D'ARRIVE "class="text-input" name="HA">
   </div>
   <div class=column>
